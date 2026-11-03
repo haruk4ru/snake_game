@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>슈퍼 카 스네이크: 해저드 런 (Super Car Snake)</title>
-    <meta name="description" content="확장된 필드, 3종 특수 아이템(속도감소, 꼬리 단축, 5초 무적), 30초 후 등장하는 도로 장애물을 돌파하는 자동차 스네이크 게임" />
-    <meta property="og:title" content="슈퍼 카 스네이크: 해저드 런" />
-    <meta property="og:description" content="확장된 필드, 3종 특수 아이템(속도감소, 꼬리 단축, 5초 무적), 30초 후 등장하는 도로 장애물을 돌파하는 자동차 스네이크 게임" />
+    <title>Snakeka</title>
+    <meta name="description" content="Snakeka - 26×26 필드, 3종 특수 아이템(속도감소, 길이감소, 5초무적), 도로 차단벽을 돌파하는 자동차 스네이크 게임" />
+    <meta property="og:title" content="Snakeka" />
+    <meta property="og:description" content="Snakeka - 26×26 필드, 3종 특수 아이템(속도감소, 길이감소, 5초무적), 도로 차단벽을 돌파하는 자동차 스네이크 게임" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -63,14 +63,14 @@
     <header class="w-full max-w-4xl flex items-center justify-between gap-4 py-2 px-3 border-b border-slate-900 mb-3">
       <!-- Zone 1: Wordmark -->
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <div class="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
           <i class="fa-solid fa-car-side text-lg"></i>
         </div>
         <div>
-          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-amber-400 flex items-center gap-1.5 leading-tight">
-            슈퍼 카 스네이크 <span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300">해저드 런</span>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-cyan-400 flex items-center gap-1.5 leading-tight">
+            Snakeka <span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300">26×26</span>
           </h1>
-          <p class="text-[11px] text-slate-400 font-medium">3배 확장 필드 · 3종 특수 아이템 · 30초 도로 차단벽</p>
+          <p class="text-[11px] text-slate-400 font-medium">3종 특수 아이템 · 차단벽 돌파 자동차 스네이크</p>
         </div>
       </div>
 
@@ -78,23 +78,9 @@
       <nav class="hidden sm:flex items-center gap-3 text-xs font-medium text-slate-400">
         <button 
           id="navGuideBtn" 
-          class="hover:text-amber-400 transition-colors flex items-center gap-1 cursor-pointer"
+          class="hover:text-cyan-400 transition-colors flex items-center gap-1 cursor-pointer"
         >
           <i class="fa-solid fa-circle-info"></i> 게임 규칙
-        </button>
-        <button 
-          id="navDownloadHtmlBtn" 
-          class="hover:text-emerald-400 transition-colors flex items-center gap-1 cursor-pointer"
-          title="인터넷 없이 플레이 가능한 단일 HTML 파일로 저장"
-        >
-          <i class="fa-solid fa-download"></i> HTML 받기
-        </button>
-        <button 
-          id="navGithubBtn" 
-          class="hover:text-cyan-300 text-cyan-400 font-bold transition-colors flex items-center gap-1 cursor-pointer px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30"
-          title="GitHub 업로드용 game 폴더 ZIP 파일 다운로드"
-        >
-          <i class="fa-solid fa-folder-arrow-down"></i> GitHub game 폴더 받기
         </button>
       </nav>
 
@@ -174,58 +160,40 @@
 
         <!-- Initial Start Screen Overlay -->
         <div id="startOverlay" class="absolute inset-0 bg-slate-950/92 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-10">
-          <div class="max-w-sm flex flex-col items-center">
-            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center mb-3 shadow-lg shadow-amber-500/10">
+          <div class="max-w-sm flex flex-col items-center w-full">
+            <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mb-3 shadow-lg shadow-cyan-500/10">
               <i class="fa-solid fa-car-side text-2xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-amber-400 tracking-tight mb-1">슈퍼 카 스네이크</h2>
-            <p class="text-xs text-slate-400 mb-3.5">확장된 필드에서 3종 아이템을 수집하고 장애물을 돌파하세요!</p>
+            <h2 class="text-3xl font-black text-cyan-400 tracking-tight mb-1">Snakeka</h2>
+            <p class="text-xs text-slate-400 mb-4">26×26 필드에서 아이템을 수집하고 차단벽을 돌파하세요!</p>
 
-            <!-- Rules summary box -->
-            <div class="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-left text-xs space-y-1.5 mb-4 text-slate-300">
-              <div class="text-[11px] font-bold text-amber-400 border-b border-slate-800 pb-1 flex items-center justify-between">
+            <!-- Rules summary box - Exactly matching user requirements -->
+            <div class="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 text-left text-xs space-y-2 mb-5 text-slate-300">
+              <div class="text-[11px] font-bold text-cyan-400 border-b border-slate-800 pb-1.5 flex items-center justify-between">
                 <span>🎮 핵심 시스템 안내</span>
-                <span id="currentGridBadge" class="text-slate-400 font-mono">26×26 필드</span>
+                <span class="text-slate-400 font-mono text-[10px] bg-slate-800/80 px-2 py-0.5 rounded">26×26 필드</span>
               </div>
-              <div class="flex items-center gap-2 text-slate-300">
-                <span class="text-amber-400 font-bold">⛽ 연료통</span>: 초기 2개 → 16개 후 3개 → 30개 후 4개 등장
+              <div class="flex items-center gap-2 text-slate-200">
+                <span class="text-amber-400 font-bold shrink-0">⛽ 연료통</span>: 개당 10점 (최대 4개 등장, 4색상 차량 연결)
               </div>
-              <div class="flex items-center gap-2 text-slate-300">
-                <span class="text-sky-400 font-bold">❄️ 속도 감소</span>: 6초간 주행 속도 감속 (안정적 코너링)
+              <div class="flex items-center gap-2 text-slate-200">
+                <span class="text-sky-400 font-bold shrink-0">❄️ 속도감소</span>: 6초간 주행 속도 감소
               </div>
-              <div class="flex items-center gap-2 text-slate-300">
-                <span class="text-emerald-400 font-bold">🔧 길이 -3칸</span>: 꼬리 3칸 즉시 제거 & 차체 슬림화 (+30점)
+              <div class="flex items-center gap-2 text-slate-200">
+                <span class="text-emerald-400 font-bold shrink-0">🔧 길이감소</span>: 꼬리 3칸 감소
               </div>
-              <div class="flex items-center gap-2 text-slate-300">
-                <span class="text-purple-400 font-bold">🛡️ 5초 무적</span>: 5초간 몸체 & 도로 장애물 완전 돌파!
+              <div class="flex items-center gap-2 text-slate-200">
+                <span class="text-purple-400 font-bold shrink-0">🛡️ 5초무적</span>: 5초간 몸체/장애물에 닿기 가능
               </div>
-              <div class="flex items-center gap-2 text-rose-400 font-semibold pt-1 border-t border-slate-800/60">
+              <div class="flex items-center gap-2 text-rose-400 font-semibold pt-1.5 border-t border-slate-800/60">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>30초 생존 시: 차단벽 5개로 시작해 최대 20개까지 분산 설치</span>
-              </div>
-            </div>
-
-            <!-- Field Size Option Selector -->
-            <div class="w-full mb-4">
-              <label class="text-[11px] font-bold text-slate-400 block mb-1.5 text-left">
-                경기장 필드 크기 선택:
-              </label>
-              <div class="grid grid-cols-3 gap-1.5">
-                <button type="button" data-grid="22" class="grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer">
-                  22 × 22 (2.1배)
-                </button>
-                <button type="button" data-grid="26" class="grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-amber-500/20 border-amber-500 text-amber-300 font-bold cursor-pointer">
-                  26 × 26 (3.0배)
-                </button>
-                <button type="button" data-grid="30" class="grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer">
-                  30 × 30 (4.0배)
-                </button>
+                <span>차단벽 : 시간이 지남에 따라 최대 20개까지 등장</span>
               </div>
             </div>
 
             <button
               id="startBtn"
-              class="w-full py-3 px-8 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-extrabold text-base transition-all shadow-lg shadow-amber-500/25 cursor-pointer flex items-center justify-center gap-2"
+              class="w-full py-3.5 px-8 rounded-xl bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-extrabold text-base transition-all shadow-lg shadow-cyan-500/25 cursor-pointer flex items-center justify-center gap-2"
             >
               <i class="fa-solid fa-play"></i> 주행 시작하기 (Space)
             </button>
@@ -282,20 +250,13 @@
               >
                 <i class="fa-solid fa-rotate-left"></i> 다시 주행하기 (초기화면으로)
               </button>
-              <div class="flex gap-2 w-full">
+              <div class="w-full">
                 <button
                   id="quickRestartBtn"
-                  class="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-semibold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                  class="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-semibold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                   title="초기화면을 거치지 않고 바로 시작"
                 >
                   <i class="fa-solid fa-play text-xs"></i> 즉시 재시작
-                </button>
-                <button
-                  id="gameOverDownloadBtn"
-                  class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-semibold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-                  title="HTML 파일 다운로드"
-                >
-                  <i class="fa-solid fa-download"></i> HTML 다운로드
                 </button>
               </div>
             </div>
@@ -334,12 +295,6 @@
           <button id="mobileGuideBtn" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs flex items-center gap-1" title="게임 규칙">
             <i class="fa-solid fa-circle-info"></i>
           </button>
-          <button id="mobileGithubBtn" class="p-2 rounded-lg bg-cyan-500/15 border border-cyan-500/40 text-cyan-400 text-xs flex items-center gap-1" title="GitHub game 폴더">
-            <i class="fa-solid fa-folder-arrow-down"></i>
-          </button>
-          <button id="mobileDownloadBtn" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs flex items-center gap-1" title="HTML 다운로드">
-            <i class="fa-solid fa-download"></i>
-          </button>
         </div>
       </div>
 
@@ -347,12 +302,8 @@
 
     <!-- 4. Footer -->
     <footer class="w-full max-w-4xl py-3 border-t border-slate-900 text-center text-xs text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-2 mt-2">
-      <span>슈퍼 카 스네이크: 해저드 런 · Pure Vanilla JS GitHub Pages Ready</span>
+      <span>Snakeka · 26×26 필드 자동차 스네이크</span>
       <div class="flex items-center gap-4 text-slate-500">
-        <button id="footerGithubBtn" class="text-cyan-400/80 hover:text-cyan-300 flex items-center gap-1 cursor-pointer font-medium">
-          <i class="fa-solid fa-folder-arrow-down"></i> 바탕화면용 game 폴더 받기
-        </button>
-        <span>·</span>
         <span>5초 무적 시 장애물 안전 돌파</span>
       </div>
     </footer>
@@ -361,33 +312,42 @@
     <div id="guideModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
       <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl relative">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-          <h3 class="text-base font-bold text-amber-400 flex items-center gap-2">
-            <i class="fa-solid fa-circle-info"></i> 게임 상세 가이드 & 아이템 도감
+          <h3 class="text-base font-bold text-cyan-400 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info"></i> Snakeka 핵심 시스템 가이드
           </h3>
           <button id="closeGuideModalBtn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer">
             ✕
           </button>
         </div>
 
-        <div class="space-y-3.5 text-xs text-slate-300">
+        <div class="space-y-3 text-xs text-slate-300">
           <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
-            <span class="font-bold text-amber-300 block mb-1">1. 게임필드 2-3배 확장</span>
+            <span class="font-bold text-cyan-300 block mb-1">🎮 경기장 필드</span>
             <p class="text-slate-400 leading-relaxed">
-              기존 15×15(225칸)에서 3배에 달하는 <b class="text-slate-200">26×26(676칸)</b>으로 대폭 넓어졌습니다.
-              긴 차체를 회전시키고 장애물을 회피할 충분한 여유 공간을 제공합니다.
+              최적화된 <b class="text-slate-200">26×26 (총 676칸)</b> 단일 와이드 경기장에서 주행합니다.
             </p>
           </div>
 
-          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2">
-            <span class="font-bold text-amber-300 block">2. 무작위 3종 아이템 시스템</span>
+          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2.5">
+            <span class="font-bold text-cyan-300 block">핵심 시스템 & 아이템</span>
             
+            <div class="flex items-start gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-gas-pump"></i>
+              </div>
+              <div>
+                <b class="text-amber-300 block">연료통 (빨강 · 파랑 · 보라 · 초록)</b>
+                <p class="text-slate-400">개당 10점 (최대 4개 등장). 획득한 연료통의 색깔이 새로 늘어나는 차량의 색으로 연결됩니다!</p>
+              </div>
+            </div>
+
             <div class="flex items-start gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
                 <i class="fa-solid fa-snowflake"></i>
               </div>
               <div>
-                <b class="text-sky-300 block">일시적 속도 감소 (쿨링 브레이크)</b>
-                <p class="text-slate-400">6초 동안 이동 틱 딜레이가 늘어나 차량이 천천히 주행합니다. 고속 상황에서 꼬임 위험을 안전하게 풀어줍니다.</p>
+                <b class="text-sky-300 block">속도감소</b>
+                <p class="text-slate-400">6초간 주행 속도 감소 (고속 주행 중 안전한 코너링 확보)</p>
               </div>
             </div>
 
@@ -396,8 +356,8 @@
                 <i class="fa-solid fa-wrench"></i>
               </div>
               <div>
-                <b class="text-emerald-300 block">길이 3칸 감소 (섀시 정비)</b>
-                <p class="text-slate-400">획득 즉시 꼬리 3칸이 깔끔하게 잘려나가며 차체가 가벼워집니다 (최소 3칸 유지). 보너스 30점 지급!</p>
+                <b class="text-emerald-300 block">길이감소</b>
+                <p class="text-slate-400">꼬리 3칸 감소 (차체 경량화 및 슬림화, +30점 보너스)</p>
               </div>
             </div>
 
@@ -406,107 +366,30 @@
                 <i class="fa-solid fa-shield-halved"></i>
               </div>
               <div>
-                <b class="text-purple-300 block">일시적 무적 (5초 지속)</b>
-                <p class="text-slate-400">정확히 5초 동안 차체에 에너지 방어막이 회전하며, <b>자신의 몸통 충돌 및 30초 도로 차단벽 충돌을 완전 방어</b>하고 돌파합니다.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-gas-pump"></i>
-              </div>
-              <div>
-                <b class="text-amber-300 block">연료통 단계별 확장</b>
-                <p class="text-slate-400">초기 2개로 시작하여, 연료 16개 수집 후 3개, 30개 수집 후 4개가 동시 등장하여 빠른 득점과 성장이 가능합니다.</p>
+                <b class="text-purple-300 block">5초무적</b>
+                <p class="text-slate-400">5초간 몸체/장애물에 닿기 가능 (몸통 통과 및 차단벽 파괴 돌파!)</p>
               </div>
             </div>
           </div>
 
           <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
-            <span class="font-bold text-rose-400 block mb-1">3. 도로 공사 차단벽 (5개 시작 ~ 최대 20개 분산)</span>
+            <span class="font-bold text-rose-400 block mb-1">차단벽</span>
             <p class="text-slate-400 leading-relaxed">
-              게임 시작 후 <b>30초가 경과하면 통과할 수 없는 콘크리트 차단벽이 5개로 시작해 최대 20개까지 분산 설치</b>됩니다 (차단벽끼리 뭉치지 않도록 밀집 방지 안전 거리 유지). 일반 상태에서 부딪히면 게임오버되지만, <b className="text-purple-300">5초 무적 상태</b>에서는 방어막으로 파괴하며 안전하게 돌파할 수 있습니다!
+              시간이 지남에 따라 최대 20개까지 등장 (30초 후 5개 시작, 밀집 방지 안전 거리 유지).
+              일반 상태에서 충돌하면 게임오버되지만, <b class="text-purple-300">5초무적</b> 상태에서는 파괴 돌파 가능!
             </p>
           </div>
         </div>
 
         <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end">
-          <button id="confirmGuideModalBtn" class="py-2 px-5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer">
+          <button id="confirmGuideModalBtn" class="py-2 px-5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs cursor-pointer">
             확인 및 닫기
           </button>
         </div>
       </div>
     </div>
 
-    <!-- 6. GitHub Upload & game.zip Download Modal (hidden by default) -->
-    <div id="githubModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
-      <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl relative">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-          <h3 class="text-base font-bold text-cyan-400 flex items-center gap-2">
-            <i class="fa-solid fa-folder-arrow-down text-cyan-400"></i>
-            GitHub 업로드용 game 폴더 패키지
-          </h3>
-          <button id="closeGithubModalBtn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer">
-            ✕
-          </button>
-        </div>
-
-        <div class="space-y-3.5 text-xs text-slate-300">
-          <div class="p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-center space-y-2">
-            <p class="text-xs text-cyan-200 font-medium">
-              GitHub Pages에서 빌드 도구 없이 바로 실행되는 <b class="text-cyan-400">index.html, README.md, package.json</b> 등이 모두 포함된 압축 파일입니다.
-            </p>
-            <button
-              id="downloadZipBtn"
-              class="w-full py-3 px-6 rounded-xl bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-extrabold text-sm transition-all shadow-lg shadow-cyan-500/25 cursor-pointer flex items-center justify-center gap-2"
-            >
-              <i class="fa-solid fa-download"></i> game.zip 다운로드 (바탕화면에 압축 해제)
-            </button>
-          </div>
-
-          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-            <span class="font-bold text-amber-300 block">📁 바탕화면에 저장 및 GitHub 업로드 4단계 안내:</span>
-            <ol class="list-decimal list-inside space-y-1.5 text-slate-400 leading-relaxed">
-              <li>위 <b class="text-cyan-300">game.zip</b> 버튼을 눌러 파일을 다운로드합니다.</li>
-              <li>다운로드된 <b class="text-slate-200">game.zip</b> 압축을 풀어 <b class="text-amber-300">바탕화면(Desktop)</b>의 <code class="bg-slate-900 px-1.5 py-0.5 rounded text-amber-300">game</code> 폴더로 배치합니다.</li>
-              <li>바탕화면의 <b class="text-slate-200">game 폴더 안</b>에서 마우스 우클릭 후 <b>'터미널 열기'</b>(또는 Git Bash)를 실행합니다.</li>
-              <li>아래 Git 명령어를 복사하여 터미널에 붙여넣기 실행합니다.</li>
-            </ol>
-          </div>
-
-          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
-            <div class="flex items-center justify-between pb-1">
-              <span class="font-mono text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
-                <i class="fa-solid fa-code-branch text-cyan-400"></i> Git 업로드 명령어
-              </span>
-              <button
-                id="copyGitCmdBtn"
-                class="flex items-center gap-1 text-[11px] py-1 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 cursor-pointer font-medium transition-colors"
-              >
-                <i class="fa-regular fa-copy"></i> 명령어 복사
-              </button>
-            </div>
-            <pre class="p-2.5 rounded-lg bg-slate-900 border border-slate-800/80 font-mono text-[11px] text-cyan-300 overflow-x-auto select-all leading-relaxed">git init
-git add .
-git commit -m "feat: Super Car Snake GitHub Pages release"
-git branch -M main
-git remote add origin https://github.com/당신의깃허브아이디/리포지토리이름.git
-git push -u origin main</pre>
-            <p class="text-[10px] text-slate-500">
-              * 배포 후 GitHub 리포지토리의 [Settings] ➔ [Pages] ➔ Source를 "Deploy from a branch" (Branch: main, /(root))로 설정하면 1분 안에 즉시 게임 웹사이트가 열립니다!
-            </p>
-          </div>
-        </div>
-
-        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end gap-2">
-          <button id="closeGithubModalFooterBtn" class="py-2 px-5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs cursor-pointer">
-            닫기
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 7. Pure Vanilla JavaScript Game Engine (Zero Build / 100% Native Single-File Browser Ready) -->
+    <!-- 6. Pure Vanilla JavaScript Game Engine (Zero Build / 100% Native Single-File Browser Ready) -->
     <script>
 /**
  * Super Car Snake: Hazard Run
@@ -728,22 +611,16 @@ const mobileGuideBtn = document.getElementById('mobileGuideBtn');
 const closeGuideModalBtn = document.getElementById('closeGuideModalBtn');
 const confirmGuideModalBtn = document.getElementById('confirmGuideModalBtn');
 
-const githubModal = document.getElementById('githubModal');
-const navGithubBtn = document.getElementById('navGithubBtn');
-const mobileGithubBtn = document.getElementById('mobileGithubBtn');
-const footerGithubBtn = document.getElementById('footerGithubBtn');
-const closeGithubModalBtn = document.getElementById('closeGithubModalBtn');
-const closeGithubModalFooterBtn = document.getElementById('closeGithubModalFooterBtn');
-const downloadZipBtn = document.getElementById('downloadZipBtn');
-const copyGitCmdBtn = document.getElementById('copyGitCmdBtn');
-
-const navDownloadHtmlBtn = document.getElementById('navDownloadHtmlBtn');
-const mobileDownloadBtn = document.getElementById('mobileDownloadBtn');
-const currentGridBadge = document.getElementById('currentGridBadge');
-const gridBtns = document.querySelectorAll('.grid-btn');
+// 4 Fuel Canister Colors: Red, Blue, Purple, Green
+const FUEL_COLORS = [
+  { id: 'RED', hex: '#ef4444', glow: 'rgba(239, 68, 68, 0.4)', name: '빨강' },
+  { id: 'BLUE', hex: '#3b82f6', glow: 'rgba(59, 130, 246, 0.4)', name: '파랑' },
+  { id: 'PURPLE', hex: '#a855f7', glow: 'rgba(168, 85, 247, 0.4)', name: '보라' },
+  { id: 'GREEN', hex: '#10b981', glow: 'rgba(16, 185, 129, 0.4)', name: '초록' }
+];
 
 // --- 3. Game State Variables ---
-let gridCount = 26; // Default 26x26 (~3x field)
+let gridCount = 26; // Fixed 26x26 arena as requested
 let cellSize = 0;
 
 let car = [];
@@ -762,14 +639,14 @@ let isGameOver = false;
 
 let score = 0;
 let fuelCount = 0;
-let highScore = parseInt(localStorage.getItem('carSnakeHighScore_v2') || '0', 10);
+let highScore = parseInt(localStorage.getItem('snakekaHighScore_v1') || '0', 10);
 highScoreDisplay.innerText = highScore;
 
 let itemsCollectedCount = 0;
 let startTime = 0;
 let elapsedSeconds = 0;
 let lastTickTime = 0;
-let baseInterval = 145;
+let baseInterval = 150;
 
 let shieldUntil = 0; // 5s invincibility
 let slowUntil = 0;   // 6s speed reduction
@@ -849,6 +726,7 @@ function getNonClusteredObstaclePos(existingObstacles, avoidHeadDist = 5) {
 }
 
 // Fuel progression: 2 initially, 3 after 16, 4 after 30
+// Each fuel is randomly assigned one of the 4 colors: 빨강, 파랑, 보라, 초록
 function spawnFuels() {
   let targetCount = 2;
   if (fuelCount >= 30) {
@@ -859,8 +737,17 @@ function spawnFuels() {
 
   while (fuels.length < targetCount) {
     const pos = getSafeRandomPosition(2);
-    if (pos) fuels.push(pos);
-    else break;
+    if (pos) {
+      const colorObj = FUEL_COLORS[Math.floor(Math.random() * FUEL_COLORS.length)];
+      fuels.push({
+        x: pos.x,
+        y: pos.y,
+        color: colorObj.hex,
+        colorData: colorObj
+      });
+    } else {
+      break;
+    }
   }
 }
 
@@ -976,9 +863,9 @@ function startGame() {
   const startY = Math.floor(gridCount / 2);
 
   car = [
-    { x: startX, y: startY },
-    { x: startX - 1, y: startY },
-    { x: startX - 2, y: startY },
+    { x: startX, y: startY, color: '#0ea5e9' },
+    { x: startX - 1, y: startY, color: '#06b6d4' },
+    { x: startX - 2, y: startY, color: '#0284c7' },
   ];
   direction = 'RIGHT';
   nextDirection = 'RIGHT';
@@ -1000,7 +887,7 @@ function startGame() {
 
   startTime = Date.now();
   lastTickTime = Date.now();
-  baseInterval = 145;
+  baseInterval = 150;
 
   isPlaying = true;
   isPaused = false;
@@ -1132,28 +1019,44 @@ function gameTick() {
     }
   }
 
-  car.unshift(head);
+  // Save previous tail position before movement
+  const tail = { ...car[car.length - 1] };
+
+  // Move body segments forward, keeping each segment's individual fuel color
+  for (let i = car.length - 1; i > 0; i--) {
+    car[i].x = car[i - 1].x;
+    car[i].y = car[i - 1].y;
+  }
+  car[0].x = head.x;
+  car[0].y = head.y;
 
   // 4. Fuel Pickup
   const fuelIndex = fuels.findIndex(f => f.x === head.x && f.y === head.y);
   if (fuelIndex !== -1) {
+    const eatenFuel = fuels[fuelIndex];
     sounds.playFuel();
     score += 10;
     fuelCount++;
     fuels.splice(fuelIndex, 1);
-    addParticles(head.x, head.y, '#ef4444', 12);
-    addFloatingText(head.x, head.y, '+10 연료', '#f59e0b', 1000);
+
+    // Car growth: new vehicle segment takes the exact color of the collected fuel
+    car.push({
+      x: tail.x,
+      y: tail.y,
+      color: eatenFuel.color
+    });
+
+    addParticles(head.x, head.y, eatenFuel.color, 16);
+    addFloatingText(head.x, head.y, `+10 ${eatenFuel.colorData?.name || ''} 연료`, eatenFuel.color, 1100);
 
     if (score > highScore) {
       highScore = score;
-      localStorage.setItem('carSnakeHighScore_v2', score.toString());
+      localStorage.setItem('snakekaHighScore_v1', score.toString());
       highScoreDisplay.innerText = highScore;
     }
 
     updateHUD();
     spawnFuels();
-  } else {
-    car.pop();
   }
 
   // 5. Special Item Pickup
@@ -1261,8 +1164,8 @@ function gameLoop() {
 
     items = items.filter(i => now - i.spawnTime < i.lifeMs);
 
-    // Speed calculation
-    let currentInterval = Math.max(75, baseInterval - Math.floor(fuelCount / 2) * 5);
+    // Speed calculation - Max speed reduced to ~0.85x of previous top speed (min interval 88ms vs 75ms)
+    let currentInterval = Math.max(88, baseInterval - Math.floor(fuelCount / 2) * 4);
     if (now < slowUntil) {
       currentInterval += 65; // Slow item buffer
     }
@@ -1316,7 +1219,7 @@ function drawScene() {
 
     ctx.save();
     const grad = ctx.createRadialGradient(hx, hy, cellSize * 0.5, hx, hy, cellSize * 4.5);
-    grad.addColorStop(0, isShieldActive ? 'rgba(192, 132, 252, 0.25)' : 'rgba(251, 191, 36, 0.22)');
+    grad.addColorStop(0, isShieldActive ? 'rgba(192, 132, 252, 0.25)' : 'rgba(56, 189, 248, 0.28)');
     grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = grad;
 
@@ -1334,13 +1237,13 @@ function drawScene() {
     ctx.restore();
   }
 
-  // Obstacles (Concrete Hazard Barriers)
+  // Obstacles (Heavy Industrial Hazard Barricades - Distinct High-Contrast Warning Colors)
   obstacles.forEach(obs => {
     const ox = obs.x * cellSize;
     const oy = obs.y * cellSize;
     const pad = 2 * (window.devicePixelRatio || 1);
 
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = '#0f172a';
     ctx.beginPath();
     ctx.roundRect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2, 4);
     ctx.fill();
@@ -1350,10 +1253,12 @@ function drawScene() {
     ctx.rect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2);
     ctx.clip();
 
-    ctx.fillStyle = '#f59e0b';
+    // High visibility safety yellow warning background
+    ctx.fillStyle = '#facc15';
     ctx.fillRect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2);
 
-    ctx.fillStyle = '#090d16';
+    // Bold charcoal black diagonal stripes
+    ctx.fillStyle = '#09090b';
     const stripeWidth = cellSize * 0.25;
     for (let s = -cellSize; s < cellSize * 2; s += stripeWidth * 2) {
       ctx.beginPath();
@@ -1365,41 +1270,49 @@ function drawScene() {
       ctx.fill();
     }
 
-    const beaconPulse = Math.sin(now * 0.008) * 0.4 + 0.6;
+    // High intensity flashing red hazard strobe
+    const beaconPulse = Math.sin(now * 0.009) * 0.45 + 0.55;
     ctx.fillStyle = `rgba(239, 68, 68, ${beaconPulse})`;
     ctx.beginPath();
-    ctx.arc(ox + cellSize / 2, oy + cellSize / 2, cellSize * 0.2, 0, Math.PI * 2);
+    ctx.arc(ox + cellSize / 2, oy + cellSize / 2, cellSize * 0.22, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
 
+    // Heavy red danger outline
     ctx.strokeStyle = '#ef4444';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 2 * (window.devicePixelRatio || 1);
     ctx.strokeRect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2);
   });
 
-  // Fuels (Jerrycans)
+  // Fuels (Jerrycans with 4 Distinct Colors: 빨강, 파랑, 보라, 초록)
   fuels.forEach(fuel => {
     const fx = fuel.x * cellSize;
     const fy = fuel.y * cellSize;
-    const pulse = Math.sin(now * 0.006) * 1.5;
+    const pulse = Math.sin(now * 0.006 + (fuel.x * 3 + fuel.y)) * 1.5;
     const pad = Math.max(3, cellSize * 0.15) - pulse * 0.3;
+    const color = fuel.color || '#ef4444';
+    const glow = fuel.colorData?.glow || 'rgba(239, 68, 68, 0.35)';
 
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+    // Outer colored glow aura
+    ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(fx + cellSize / 2, fy + cellSize / 2, cellSize * 0.55, 0, Math.PI * 2);
+    ctx.arc(fx + cellSize / 2, fy + cellSize / 2, cellSize * 0.58, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#ef4444';
+    // Jerrycan main canister
+    ctx.fillStyle = color;
     ctx.beginPath();
     ctx.roundRect(fx + pad, fy + pad, cellSize - pad * 2, cellSize - pad * 2, 4);
     ctx.fill();
 
+    // Jerrycan white nozzle & handle
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(fx + cellSize / 2 - 2, fy + pad + 2, 4, cellSize * 0.25);
+    ctx.fillRect(fx + cellSize / 2 - 2, fy + pad + 1, 4, cellSize * 0.26);
 
-    ctx.fillStyle = '#fecaca';
-    ctx.fillRect(fx + cellSize * 0.35, fy + cellSize * 0.48, cellSize * 0.3, cellSize * 0.18);
+    // Canister embossed accent
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.38)';
+    ctx.fillRect(fx + cellSize * 0.33, fy + cellSize * 0.48, cellSize * 0.34, cellSize * 0.18);
   });
 
   // Special Items
@@ -1473,7 +1386,7 @@ function drawScene() {
     if (index === 0) {
       drawCarHead(sx, sy, cellSize, direction, isShieldActive, isSlowActive);
     } else {
-      drawCarBody(sx, sy, cellSize, index, isShieldActive, isSlowActive);
+      drawCarBody(sx, sy, cellSize, segment, index, isShieldActive, isSlowActive);
     }
   });
 
@@ -1561,23 +1474,28 @@ function drawCarHead(px, py, cSize, dir, isShield, isSlow) {
 
   ctx.rotate(angle);
 
-  ctx.fillStyle = isShield ? '#9333ea' : isSlow ? '#0284c7' : '#ef4444';
+  // Futuristic Cyan/Blue Sports Car Chassis (completely distinct from yellow/black hazard barrier)
+  ctx.fillStyle = isShield ? '#9333ea' : isSlow ? '#0284c7' : '#0ea5e9';
   ctx.beginPath();
   ctx.roundRect(-cSize / 2 + pad, -cSize / 2 + pad, cSize - pad * 2, cSize - pad * 2, 5);
   ctx.fill();
 
-  ctx.fillStyle = '#ffffff';
+  // Racing Center Stripe
+  ctx.fillStyle = isShield ? '#e9d5ff' : '#ffffff';
   ctx.fillRect(-cSize / 2 + pad, -cSize * 0.08, cSize - pad * 2, cSize * 0.16);
 
-  ctx.fillStyle = '#38bdf8';
+  // Tinted Cockpit Windshield (Deep Midnight Tint)
+  ctx.fillStyle = isShield ? '#581c87' : '#082f49';
   ctx.beginPath();
   ctx.roundRect(0, -cSize * 0.28, cSize * 0.28, cSize * 0.56, 3);
   ctx.fill();
 
-  ctx.fillStyle = '#fef08a';
+  // Brilliant Xenon White LED Headlights
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(cSize / 2 - pad - 3, -cSize * 0.35, 3, 3);
   ctx.fillRect(cSize / 2 - pad - 3, cSize * 0.35 - 3, 3, 3);
 
+  // Wheels
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(-cSize * 0.32, -cSize / 2, cSize * 0.22, 3);
   ctx.fillRect(cSize * 0.12, -cSize / 2, cSize * 0.22, 3);
@@ -1587,22 +1505,32 @@ function drawCarHead(px, py, cSize, dir, isShield, isSlow) {
   ctx.restore();
 }
 
-function drawCarBody(px, py, cSize, index, isShield, isSlow) {
+function drawCarBody(px, py, cSize, segment, index, isShield, isSlow) {
   const pad = 3 * (window.devicePixelRatio || 1);
   ctx.save();
-  const isEven = index % 2 === 0;
-  let baseColor = isEven ? '#f59e0b' : '#d97706';
-  if (isShield) baseColor = isEven ? '#c084fc' : '#a855f7';
-  else if (isSlow) baseColor = isEven ? '#38bdf8' : '#0284c7';
+
+  // Use the segment's individual fuel color (Red, Blue, Purple, Green)!
+  let baseColor = segment?.color || (index % 2 === 0 ? '#06b6d4' : '#0284c7');
+  if (isShield) {
+    baseColor = index % 2 === 0 ? '#c084fc' : '#a855f7';
+  } else if (isSlow) {
+    baseColor = index % 2 === 0 ? '#38bdf8' : '#0284c7';
+  }
 
   ctx.fillStyle = baseColor;
   ctx.beginPath();
   ctx.roundRect(px + pad, py + pad, cSize - pad * 2, cSize - pad * 2, 4);
   ctx.fill();
 
-  ctx.strokeStyle = isShield ? '#7e22ce' : isSlow ? '#0369a1' : '#92400e';
+  // Luminous outline
+  ctx.strokeStyle = isShield ? '#7e22ce' : isSlow ? '#0369a1' : 'rgba(255, 255, 255, 0.45)';
   ctx.lineWidth = 1.5;
   ctx.strokeRect(px + pad + 2, py + pad + 2, cSize - (pad + 2) * 2, cSize - (pad + 2) * 2);
+
+  // Subtle interior cyber highlight
+  ctx.fillStyle = isShield ? 'rgba(233, 213, 255, 0.4)' : isSlow ? 'rgba(186, 230, 253, 0.4)' : 'rgba(255, 255, 255, 0.28)';
+  ctx.fillRect(px + cSize * 0.35, py + cSize * 0.35, cSize * 0.3, cSize * 0.3);
+
   ctx.restore();
 }
 
@@ -1624,70 +1552,11 @@ muteBtn.addEventListener('click', () => {
 
 pauseBtn.addEventListener('click', togglePause);
 
-// Grid size picker buttons
-gridBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    gridBtns.forEach(b => {
-      b.className = 'grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer';
-    });
-    btn.className = 'grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-amber-500/20 border-amber-500 text-amber-300 font-bold cursor-pointer';
-    gridCount = parseInt(btn.getAttribute('data-grid'), 10);
-    currentGridBadge.innerText = `${gridCount}×${gridCount} 필드`;
-    sounds.playClick();
-    resizeCanvas();
-  });
-});
-
 // Modals
 navGuideBtn.addEventListener('click', () => { guideModal.classList.remove('hidden'); sounds.playClick(); });
 mobileGuideBtn.addEventListener('click', () => { guideModal.classList.remove('hidden'); sounds.playClick(); });
 closeGuideModalBtn.addEventListener('click', () => { guideModal.classList.add('hidden'); sounds.playClick(); });
 confirmGuideModalBtn.addEventListener('click', () => { guideModal.classList.add('hidden'); sounds.playClick(); });
-
-navGithubBtn.addEventListener('click', () => { githubModal.classList.remove('hidden'); sounds.playClick(); });
-mobileGithubBtn.addEventListener('click', () => { githubModal.classList.remove('hidden'); sounds.playClick(); });
-footerGithubBtn.addEventListener('click', () => { githubModal.classList.remove('hidden'); sounds.playClick(); });
-closeGithubModalBtn.addEventListener('click', () => { githubModal.classList.add('hidden'); sounds.playClick(); });
-closeGithubModalFooterBtn.addEventListener('click', () => { githubModal.classList.add('hidden'); sounds.playClick(); });
-
-// Downloads
-function downloadZip() {
-  sounds.playClick();
-  const a = document.createElement('a');
-  a.href = './game.zip';
-  a.download = 'game.zip';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-downloadZipBtn.addEventListener('click', downloadZip);
-
-function downloadCurrentHtml() {
-  sounds.playClick();
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'super_car_snake_hazard_run.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-navDownloadHtmlBtn.addEventListener('click', downloadCurrentHtml);
-mobileDownloadBtn.addEventListener('click', downloadCurrentHtml);
-gameOverDownloadBtn.addEventListener('click', downloadCurrentHtml);
-
-copyGitCmdBtn.addEventListener('click', () => {
-  sounds.playClick();
-  const commands = `git init\ngit add .\ngit commit -m "feat: Super Car Snake GitHub Pages release"\ngit branch -M main\ngit remote add origin https://github.com/당신의깃허브아이디/리포지토리이름.git\ngit push -u origin main`;
-  navigator.clipboard.writeText(commands);
-  copyGitCmdBtn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> 복사 완료!';
-  setTimeout(() => {
-    copyGitCmdBtn.innerHTML = '<i class="fa-regular fa-copy"></i> 명령어 복사';
-  }, 2500);
-});
 
 // Mobile D-Pad
 document.getElementById('dpadUp').addEventListener('click', () => handleDirection('UP'));

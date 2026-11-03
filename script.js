@@ -218,22 +218,16 @@ const mobileGuideBtn = document.getElementById('mobileGuideBtn');
 const closeGuideModalBtn = document.getElementById('closeGuideModalBtn');
 const confirmGuideModalBtn = document.getElementById('confirmGuideModalBtn');
 
-const githubModal = document.getElementById('githubModal');
-const navGithubBtn = document.getElementById('navGithubBtn');
-const mobileGithubBtn = document.getElementById('mobileGithubBtn');
-const footerGithubBtn = document.getElementById('footerGithubBtn');
-const closeGithubModalBtn = document.getElementById('closeGithubModalBtn');
-const closeGithubModalFooterBtn = document.getElementById('closeGithubModalFooterBtn');
-const downloadZipBtn = document.getElementById('downloadZipBtn');
-const copyGitCmdBtn = document.getElementById('copyGitCmdBtn');
-
-const navDownloadHtmlBtn = document.getElementById('navDownloadHtmlBtn');
-const mobileDownloadBtn = document.getElementById('mobileDownloadBtn');
-const currentGridBadge = document.getElementById('currentGridBadge');
-const gridBtns = document.querySelectorAll('.grid-btn');
+// 4 Fuel Canister Colors: Red, Blue, Purple, Green
+const FUEL_COLORS = [
+  { id: 'RED', hex: '#ef4444', glow: 'rgba(239, 68, 68, 0.4)', name: '빨강' },
+  { id: 'BLUE', hex: '#3b82f6', glow: 'rgba(59, 130, 246, 0.4)', name: '파랑' },
+  { id: 'PURPLE', hex: '#a855f7', glow: 'rgba(168, 85, 247, 0.4)', name: '보라' },
+  { id: 'GREEN', hex: '#10b981', glow: 'rgba(16, 185, 129, 0.4)', name: '초록' }
+];
 
 // --- 3. Game State Variables ---
-let gridCount = 26; // Default 26x26 (~3x field)
+let gridCount = 26; // Fixed 26x26 arena as requested
 let cellSize = 0;
 
 let car = [];
@@ -252,14 +246,14 @@ let isGameOver = false;
 
 let score = 0;
 let fuelCount = 0;
-let highScore = parseInt(localStorage.getItem('carSnakeHighScore_v2') || '0', 10);
+let highScore = parseInt(localStorage.getItem('snakekaHighScore_v1') || '0', 10);
 highScoreDisplay.innerText = highScore;
 
 let itemsCollectedCount = 0;
 let startTime = 0;
 let elapsedSeconds = 0;
 let lastTickTime = 0;
-let baseInterval = 145;
+let baseInterval = 150;
 
 let shieldUntil = 0; // 5s invincibility
 let slowUntil = 0;   // 6s speed reduction
@@ -339,6 +333,7 @@ function getNonClusteredObstaclePos(existingObstacles, avoidHeadDist = 5) {
 }
 
 // Fuel progression: 2 initially, 3 after 16, 4 after 30
+// Each fuel is randomly assigned one of the 4 colors: 빨강, 파랑, 보라, 초록
 function spawnFuels() {
   let targetCount = 2;
   if (fuelCount >= 30) {
@@ -349,8 +344,17 @@ function spawnFuels() {
 
   while (fuels.length < targetCount) {
     const pos = getSafeRandomPosition(2);
-    if (pos) fuels.push(pos);
-    else break;
+    if (pos) {
+      const colorObj = FUEL_COLORS[Math.floor(Math.random() * FUEL_COLORS.length)];
+      fuels.push({
+        x: pos.x,
+        y: pos.y,
+        color: colorObj.hex,
+        colorData: colorObj
+      });
+    } else {
+      break;
+    }
   }
 }
 
@@ -466,9 +470,9 @@ function startGame() {
   const startY = Math.floor(gridCount / 2);
 
   car = [
-    { x: startX, y: startY },
-    { x: startX - 1, y: startY },
-    { x: startX - 2, y: startY },
+    { x: startX, y: startY, color: '#0ea5e9' },
+    { x: startX - 1, y: startY, color: '#06b6d4' },
+    { x: startX - 2, y: startY, color: '#0284c7' },
   ];
   direction = 'RIGHT';
   nextDirection = 'RIGHT';
@@ -490,7 +494,7 @@ function startGame() {
 
   startTime = Date.now();
   lastTickTime = Date.now();
-  baseInterval = 145;
+  baseInterval = 150;
 
   isPlaying = true;
   isPaused = false;
@@ -622,28 +626,44 @@ function gameTick() {
     }
   }
 
-  car.unshift(head);
+  // Save previous tail position before movement
+  const tail = { ...car[car.length - 1] };
+
+  // Move body segments forward, keeping each segment's individual fuel color
+  for (let i = car.length - 1; i > 0; i--) {
+    car[i].x = car[i - 1].x;
+    car[i].y = car[i - 1].y;
+  }
+  car[0].x = head.x;
+  car[0].y = head.y;
 
   // 4. Fuel Pickup
   const fuelIndex = fuels.findIndex(f => f.x === head.x && f.y === head.y);
   if (fuelIndex !== -1) {
+    const eatenFuel = fuels[fuelIndex];
     sounds.playFuel();
     score += 10;
     fuelCount++;
     fuels.splice(fuelIndex, 1);
-    addParticles(head.x, head.y, '#ef4444', 12);
-    addFloatingText(head.x, head.y, '+10 연료', '#f59e0b', 1000);
+
+    // Car growth: new vehicle segment takes the exact color of the collected fuel
+    car.push({
+      x: tail.x,
+      y: tail.y,
+      color: eatenFuel.color
+    });
+
+    addParticles(head.x, head.y, eatenFuel.color, 16);
+    addFloatingText(head.x, head.y, `+10 ${eatenFuel.colorData?.name || ''} 연료`, eatenFuel.color, 1100);
 
     if (score > highScore) {
       highScore = score;
-      localStorage.setItem('carSnakeHighScore_v2', score.toString());
+      localStorage.setItem('snakekaHighScore_v1', score.toString());
       highScoreDisplay.innerText = highScore;
     }
 
     updateHUD();
     spawnFuels();
-  } else {
-    car.pop();
   }
 
   // 5. Special Item Pickup
@@ -751,8 +771,8 @@ function gameLoop() {
 
     items = items.filter(i => now - i.spawnTime < i.lifeMs);
 
-    // Speed calculation
-    let currentInterval = Math.max(75, baseInterval - Math.floor(fuelCount / 2) * 5);
+    // Speed calculation - Max speed reduced to ~0.85x of previous top speed (min interval 88ms vs 75ms)
+    let currentInterval = Math.max(88, baseInterval - Math.floor(fuelCount / 2) * 4);
     if (now < slowUntil) {
       currentInterval += 65; // Slow item buffer
     }
@@ -806,7 +826,7 @@ function drawScene() {
 
     ctx.save();
     const grad = ctx.createRadialGradient(hx, hy, cellSize * 0.5, hx, hy, cellSize * 4.5);
-    grad.addColorStop(0, isShieldActive ? 'rgba(192, 132, 252, 0.25)' : 'rgba(251, 191, 36, 0.22)');
+    grad.addColorStop(0, isShieldActive ? 'rgba(192, 132, 252, 0.25)' : 'rgba(56, 189, 248, 0.28)');
     grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = grad;
 
@@ -824,13 +844,13 @@ function drawScene() {
     ctx.restore();
   }
 
-  // Obstacles (Concrete Hazard Barriers)
+  // Obstacles (Heavy Industrial Hazard Barricades - Distinct High-Contrast Warning Colors)
   obstacles.forEach(obs => {
     const ox = obs.x * cellSize;
     const oy = obs.y * cellSize;
     const pad = 2 * (window.devicePixelRatio || 1);
 
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = '#0f172a';
     ctx.beginPath();
     ctx.roundRect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2, 4);
     ctx.fill();
@@ -840,10 +860,12 @@ function drawScene() {
     ctx.rect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2);
     ctx.clip();
 
-    ctx.fillStyle = '#f59e0b';
+    // High visibility safety yellow warning background
+    ctx.fillStyle = '#facc15';
     ctx.fillRect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2);
 
-    ctx.fillStyle = '#090d16';
+    // Bold charcoal black diagonal stripes
+    ctx.fillStyle = '#09090b';
     const stripeWidth = cellSize * 0.25;
     for (let s = -cellSize; s < cellSize * 2; s += stripeWidth * 2) {
       ctx.beginPath();
@@ -855,41 +877,49 @@ function drawScene() {
       ctx.fill();
     }
 
-    const beaconPulse = Math.sin(now * 0.008) * 0.4 + 0.6;
+    // High intensity flashing red hazard strobe
+    const beaconPulse = Math.sin(now * 0.009) * 0.45 + 0.55;
     ctx.fillStyle = `rgba(239, 68, 68, ${beaconPulse})`;
     ctx.beginPath();
-    ctx.arc(ox + cellSize / 2, oy + cellSize / 2, cellSize * 0.2, 0, Math.PI * 2);
+    ctx.arc(ox + cellSize / 2, oy + cellSize / 2, cellSize * 0.22, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
 
+    // Heavy red danger outline
     ctx.strokeStyle = '#ef4444';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 2 * (window.devicePixelRatio || 1);
     ctx.strokeRect(ox + pad, oy + pad, cellSize - pad * 2, cellSize - pad * 2);
   });
 
-  // Fuels (Jerrycans)
+  // Fuels (Jerrycans with 4 Distinct Colors: 빨강, 파랑, 보라, 초록)
   fuels.forEach(fuel => {
     const fx = fuel.x * cellSize;
     const fy = fuel.y * cellSize;
-    const pulse = Math.sin(now * 0.006) * 1.5;
+    const pulse = Math.sin(now * 0.006 + (fuel.x * 3 + fuel.y)) * 1.5;
     const pad = Math.max(3, cellSize * 0.15) - pulse * 0.3;
+    const color = fuel.color || '#ef4444';
+    const glow = fuel.colorData?.glow || 'rgba(239, 68, 68, 0.35)';
 
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+    // Outer colored glow aura
+    ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(fx + cellSize / 2, fy + cellSize / 2, cellSize * 0.55, 0, Math.PI * 2);
+    ctx.arc(fx + cellSize / 2, fy + cellSize / 2, cellSize * 0.58, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#ef4444';
+    // Jerrycan main canister
+    ctx.fillStyle = color;
     ctx.beginPath();
     ctx.roundRect(fx + pad, fy + pad, cellSize - pad * 2, cellSize - pad * 2, 4);
     ctx.fill();
 
+    // Jerrycan white nozzle & handle
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(fx + cellSize / 2 - 2, fy + pad + 2, 4, cellSize * 0.25);
+    ctx.fillRect(fx + cellSize / 2 - 2, fy + pad + 1, 4, cellSize * 0.26);
 
-    ctx.fillStyle = '#fecaca';
-    ctx.fillRect(fx + cellSize * 0.35, fy + cellSize * 0.48, cellSize * 0.3, cellSize * 0.18);
+    // Canister embossed accent
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.38)';
+    ctx.fillRect(fx + cellSize * 0.33, fy + cellSize * 0.48, cellSize * 0.34, cellSize * 0.18);
   });
 
   // Special Items
@@ -963,7 +993,7 @@ function drawScene() {
     if (index === 0) {
       drawCarHead(sx, sy, cellSize, direction, isShieldActive, isSlowActive);
     } else {
-      drawCarBody(sx, sy, cellSize, index, isShieldActive, isSlowActive);
+      drawCarBody(sx, sy, cellSize, segment, index, isShieldActive, isSlowActive);
     }
   });
 
@@ -1051,23 +1081,28 @@ function drawCarHead(px, py, cSize, dir, isShield, isSlow) {
 
   ctx.rotate(angle);
 
-  ctx.fillStyle = isShield ? '#9333ea' : isSlow ? '#0284c7' : '#ef4444';
+  // Futuristic Cyan/Blue Sports Car Chassis (completely distinct from yellow/black hazard barrier)
+  ctx.fillStyle = isShield ? '#9333ea' : isSlow ? '#0284c7' : '#0ea5e9';
   ctx.beginPath();
   ctx.roundRect(-cSize / 2 + pad, -cSize / 2 + pad, cSize - pad * 2, cSize - pad * 2, 5);
   ctx.fill();
 
-  ctx.fillStyle = '#ffffff';
+  // Racing Center Stripe
+  ctx.fillStyle = isShield ? '#e9d5ff' : '#ffffff';
   ctx.fillRect(-cSize / 2 + pad, -cSize * 0.08, cSize - pad * 2, cSize * 0.16);
 
-  ctx.fillStyle = '#38bdf8';
+  // Tinted Cockpit Windshield (Deep Midnight Tint)
+  ctx.fillStyle = isShield ? '#581c87' : '#082f49';
   ctx.beginPath();
   ctx.roundRect(0, -cSize * 0.28, cSize * 0.28, cSize * 0.56, 3);
   ctx.fill();
 
-  ctx.fillStyle = '#fef08a';
+  // Brilliant Xenon White LED Headlights
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(cSize / 2 - pad - 3, -cSize * 0.35, 3, 3);
   ctx.fillRect(cSize / 2 - pad - 3, cSize * 0.35 - 3, 3, 3);
 
+  // Wheels
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(-cSize * 0.32, -cSize / 2, cSize * 0.22, 3);
   ctx.fillRect(cSize * 0.12, -cSize / 2, cSize * 0.22, 3);
@@ -1077,22 +1112,32 @@ function drawCarHead(px, py, cSize, dir, isShield, isSlow) {
   ctx.restore();
 }
 
-function drawCarBody(px, py, cSize, index, isShield, isSlow) {
+function drawCarBody(px, py, cSize, segment, index, isShield, isSlow) {
   const pad = 3 * (window.devicePixelRatio || 1);
   ctx.save();
-  const isEven = index % 2 === 0;
-  let baseColor = isEven ? '#f59e0b' : '#d97706';
-  if (isShield) baseColor = isEven ? '#c084fc' : '#a855f7';
-  else if (isSlow) baseColor = isEven ? '#38bdf8' : '#0284c7';
+
+  // Use the segment's individual fuel color (Red, Blue, Purple, Green)!
+  let baseColor = segment?.color || (index % 2 === 0 ? '#06b6d4' : '#0284c7');
+  if (isShield) {
+    baseColor = index % 2 === 0 ? '#c084fc' : '#a855f7';
+  } else if (isSlow) {
+    baseColor = index % 2 === 0 ? '#38bdf8' : '#0284c7';
+  }
 
   ctx.fillStyle = baseColor;
   ctx.beginPath();
   ctx.roundRect(px + pad, py + pad, cSize - pad * 2, cSize - pad * 2, 4);
   ctx.fill();
 
-  ctx.strokeStyle = isShield ? '#7e22ce' : isSlow ? '#0369a1' : '#92400e';
+  // Luminous outline
+  ctx.strokeStyle = isShield ? '#7e22ce' : isSlow ? '#0369a1' : 'rgba(255, 255, 255, 0.45)';
   ctx.lineWidth = 1.5;
   ctx.strokeRect(px + pad + 2, py + pad + 2, cSize - (pad + 2) * 2, cSize - (pad + 2) * 2);
+
+  // Subtle interior cyber highlight
+  ctx.fillStyle = isShield ? 'rgba(233, 213, 255, 0.4)' : isSlow ? 'rgba(186, 230, 253, 0.4)' : 'rgba(255, 255, 255, 0.28)';
+  ctx.fillRect(px + cSize * 0.35, py + cSize * 0.35, cSize * 0.3, cSize * 0.3);
+
   ctx.restore();
 }
 
@@ -1114,70 +1159,11 @@ muteBtn.addEventListener('click', () => {
 
 pauseBtn.addEventListener('click', togglePause);
 
-// Grid size picker buttons
-gridBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    gridBtns.forEach(b => {
-      b.className = 'grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer';
-    });
-    btn.className = 'grid-btn py-1.5 px-2 rounded-lg text-[11px] font-semibold border transition-all bg-amber-500/20 border-amber-500 text-amber-300 font-bold cursor-pointer';
-    gridCount = parseInt(btn.getAttribute('data-grid'), 10);
-    currentGridBadge.innerText = `${gridCount}×${gridCount} 필드`;
-    sounds.playClick();
-    resizeCanvas();
-  });
-});
-
 // Modals
 navGuideBtn.addEventListener('click', () => { guideModal.classList.remove('hidden'); sounds.playClick(); });
 mobileGuideBtn.addEventListener('click', () => { guideModal.classList.remove('hidden'); sounds.playClick(); });
 closeGuideModalBtn.addEventListener('click', () => { guideModal.classList.add('hidden'); sounds.playClick(); });
 confirmGuideModalBtn.addEventListener('click', () => { guideModal.classList.add('hidden'); sounds.playClick(); });
-
-navGithubBtn.addEventListener('click', () => { githubModal.classList.remove('hidden'); sounds.playClick(); });
-mobileGithubBtn.addEventListener('click', () => { githubModal.classList.remove('hidden'); sounds.playClick(); });
-footerGithubBtn.addEventListener('click', () => { githubModal.classList.remove('hidden'); sounds.playClick(); });
-closeGithubModalBtn.addEventListener('click', () => { githubModal.classList.add('hidden'); sounds.playClick(); });
-closeGithubModalFooterBtn.addEventListener('click', () => { githubModal.classList.add('hidden'); sounds.playClick(); });
-
-// Downloads
-function downloadZip() {
-  sounds.playClick();
-  const a = document.createElement('a');
-  a.href = './game.zip';
-  a.download = 'game.zip';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-downloadZipBtn.addEventListener('click', downloadZip);
-
-function downloadCurrentHtml() {
-  sounds.playClick();
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'super_car_snake_hazard_run.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-navDownloadHtmlBtn.addEventListener('click', downloadCurrentHtml);
-mobileDownloadBtn.addEventListener('click', downloadCurrentHtml);
-gameOverDownloadBtn.addEventListener('click', downloadCurrentHtml);
-
-copyGitCmdBtn.addEventListener('click', () => {
-  sounds.playClick();
-  const commands = `git init\ngit add .\ngit commit -m "feat: Super Car Snake GitHub Pages release"\ngit branch -M main\ngit remote add origin https://github.com/YOUR_GITHUB_ID/YOUR_REPO.git\ngit push -u origin main`;
-  navigator.clipboard.writeText(commands);
-  copyGitCmdBtn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> 복사 완료!';
-  setTimeout(() => {
-    copyGitCmdBtn.innerHTML = '<i class="fa-regular fa-copy"></i> 명령어 복사';
-  }, 2500);
-});
 
 // Mobile D-Pad
 document.getElementById('dpadUp').addEventListener('click', () => handleDirection('UP'));
