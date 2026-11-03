@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자동차 연료 수집 게임 (Car Snake Game)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            touch-action: manipulation;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .sub-title {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+        .scoreboard {
+            width: 100%;
+            max-width: 440px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+        .score-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+        }
+        .score-val {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        .divider {
+            width: 1px;
+            height: 32px;
+            background-color: #334155;
+        }
+        .game-container {
+            position: relative;
+            max-width: 440px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: #020617;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #334155;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(2, 6, 23, 0.92);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        .overlay.hidden {
+            display: none !important;
+        }
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.875rem;
+            margin-bottom: 12px;
+        }
+        .overlay-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .rules-box {
+            background-color: rgba(15, 23, 42, 0.9);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            text-align: left;
+            width: 100%;
+            max-width: 320px;
+            line-height: 1.6;
+        }
+        .rules-title {
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .msg {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+        }
+        .msg.hidden {
+            display: none;
+        }
+        .start-btn {
+            padding: 12px 32px;
+            background-color: #f59e0b;
+            color: #020617;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+            transition: all 0.2s ease;
+        }
+        .start-btn:hover {
+            background-color: #fbbf24;
+            transform: translateY(-2px);
+        }
+        .start-btn:active {
+            transform: scale(0.96);
+        }
+        .share-banner {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+        }
+        .share-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .share-btn:hover {
+            color: #ffffff;
+            border-color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 헤더 -->
+    <header>
+        <h1><i class="fa-solid fa-car-side"></i> 자동차 스네이크</h1>
+        <p class="sub-title">연료통을 수집하여 차량을 길게 연장하세요!</p>
+    </header>
+
+    <!-- 스코어보드 -->
+    <div class="scoreboard">
+        <div>
+            <span class="score-label">Score</span>
+            <span id="score" class="score-val" style="color: #fbbf24;">0</span>
+        </div>
+        <div class="divider"></div>
+        <div>
+            <span class="score-label">High Score</span>
+            <span id="highScore" class="score-val" style="color: #10b981;">0</span>
+        </div>
+    </div>
+
+    <!-- 게임 캔버스 영역 -->
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- 오버레이 -->
+        <div id="overlay" class="overlay">
+            <div id="overlayIcon" class="icon-box">
+                <i class="fa-solid fa-gas-pump"></i>
+            </div>
+            <h2 id="overlayTitle" class="overlay-title">연료 수집 주행</h2>
+            
+            <div id="rulesBox" class="rules-box">
+                <div class="rules-title">🎮 게임 규칙</div>
+                <div>• <b>조작</b>: 키보드 방향키 (<i class="fa-solid fa-arrows-up-down-left-right"></i>) 또는 WASD</div>
+                <div>• <b>연료 획득</b>: 연료통 수집 시 점수 상승 & 차체 연장</div>
+                <div>• <b>가속 규칙</b>: 연료 2개당 10ms 가속 (240ms ➔ 최대 80ms)</div>
+                <div>• <b>특수 규칙</b>: 연료 16개 수집 시 <b>연료통 2개 동시 등장!</b></div>
+            </div>
+
+            <p id="overlayMessage" class="msg hidden"></p>
+            <button id="startBtn" onclick="startGame()" class="start-btn">
+                주행 시작하기
+            </button>
+        </div>
+    </div>
+
+    <!-- 파일 저장 및 공유 안내 -->
+    <div class="share-banner">
+        <button class="share-btn" onclick="downloadHTML()">
+            <i class="fa-solid fa-download"></i> 이 게임 파일 다운로드 (.html)
+        </button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const highScoreEl = document.getElementById('highScore');
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.getElementById('overlayTitle');
+        const overlayMessage = document.getElementById('overlayMessage');
+        const overlayIcon = document.getElementById('overlayIcon');
+        const startBtn = document.getElementById('startBtn');
+        const rulesBox = document.getElementById('rulesBox');
+
+        const GRID_COUNT = 15;
+        let CELL_SIZE = 0;
+
+        const INITIAL_SPEED = 240;
+        const MAX_SPEED = 80;
+        const SPEED_STEP = 10;
+        let speed = INITIAL_SPEED;
+
+        let gameLoop = null;
+        let score = 0;
+        let fuelCount = 0;
+        let highScore = localStorage.getItem('carSnakeHighScore') || 0;
+        highScoreEl.innerText = highScore;
+
+        let car = [];
+        let direction = 'RIGHT';
+        let nextDirection = 'RIGHT';
+        let fuels = [];
+        let isPlaying = false;
+
+        function resizeCanvas() {
+            const containerWidth = canvas.parentElement.clientWidth;
+            canvas.width = containerWidth;
+            canvas.height = containerWidth;
+            CELL_SIZE = canvas.width / GRID_COUNT;
+            drawScene();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function initGame() {
+            car = [
+                { x: 5, y: 7 },
+                { x: 4, y: 7 },
+                { x: 3, y: 7 }
+            ];
+            direction = 'RIGHT';
+            nextDirection = 'RIGHT';
+            score = 0;
+            fuelCount = 0;
+            speed = INITIAL_SPEED;
+            fuels = [];
+
+            scoreEl.innerText = score;
+            spawnFuels();
+        }
+
+        function spawnFuels() {
+            const targetCount = fuelCount >= 16 ? 2 : 1;
+
+            while (fuels.length < targetCount) {
+                const fx = Math.floor(Math.random() * GRID_COUNT);
+                const fy = Math.floor(Math.random() * GRID_COUNT);
+
+                const onCar = car.some(segment => segment.x === fx && segment.y === fy);
+                const onFuel = fuels.some(f => f.x === fx && f.y === fy);
+
+                if (!onCar && !onFuel) {
+                    fuels.push({ x: fx, y: fy });
+                }
+            }
+        }
+
+        function startGame() {
+            initGame();
+            isPlaying = true;
+            overlay.classList.add('hidden');
+
+            if (gameLoop) clearInterval(gameLoop);
+            gameLoop = setInterval(update, speed);
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            clearInterval(gameLoop);
+
+            overlayIcon.innerHTML = '<i class="fa-solid fa-car-burst"></i>';
+            overlayIcon.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+            overlayIcon.style.color = '#ef4444';
+            overlayTitle.innerText = '충돌 발생!';
+            rulesBox.style.display = 'none';
+            overlayMessage.innerText = `최종 점수: ${score}점 (연료 ${fuelCount}개 수집)`;
+            overlayMessage.classList.remove('hidden');
+            startBtn.innerText = '다시 주행하기';
+            overlay.classList.remove('hidden');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyS', 'KeyA', 'KeyD'].includes(e.code)) {
+                e.preventDefault();
+                handleControl(e.code);
+            }
+        });
+
+        function handleControl(key) {
+            if (!isPlaying) return;
+
+            if ((key === 'ArrowUp' || key === 'KeyW') && direction !== 'DOWN') {
+                nextDirection = 'UP';
+            } else if ((key === 'ArrowDown' || key === 'KeyS') && direction !== 'UP') {
+                nextDirection = 'DOWN';
+            } else if ((key === 'ArrowLeft' || key === 'KeyA') && direction !== 'RIGHT') {
+                nextDirection = 'LEFT';
+            } else if ((key === 'ArrowRight' || key === 'KeyD') && direction !== 'LEFT') {
+                nextDirection = 'RIGHT';
+            }
+        }
+
+        function update() {
+            direction = nextDirection;
+            const head = { ...car[0] };
+
+            if (direction === 'UP') head.y -= 1;
+            else if (direction === 'DOWN') head.y += 1;
+            else if (direction === 'LEFT') head.x -= 1;
+            else if (direction === 'RIGHT') head.x += 1;
+
+            if (head.x < 0 || head.x >= GRID_COUNT || head.y < 0 || head.y >= GRID_COUNT) {
+                gameOver();
+                return;
+            }
+
+            for (let i = 0; i < car.length; i++) {
+                if (car[i].x === head.x && car[i].y === head.y) {
+                    gameOver();
+                    return;
+                }
+            }
+
+            car.unshift(head);
+
+            const eatenIndex = fuels.findIndex(f => f.x === head.x && f.y === head.y);
+            if (eatenIndex !== -1) {
+                score += 10;
+                fuelCount++;
+                scoreEl.innerText = score;
+                fuels.splice(eatenIndex, 1);
+
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreEl.innerText = highScore;
+                    localStorage.setItem('carSnakeHighScore', highScore);
+                }
+
+                if (fuelCount % 2 === 0 && speed > MAX_SPEED) {
+                    speed = Math.max(MAX_SPEED, speed - SPEED_STEP);
+                    clearInterval(gameLoop);
+                    gameLoop = setInterval(update, speed);
+                }
+
+                spawnFuels();
+            } else {
+                car.pop();
+            }
+
+            drawScene();
+        }
+
+        function drawScene() {
+            if (!CELL_SIZE) return;
+
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= GRID_COUNT; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * CELL_SIZE, 0);
+                ctx.lineTo(i * CELL_SIZE, canvas.height);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, i * CELL_SIZE);
+                ctx.lineTo(canvas.width, i * CELL_SIZE);
+                ctx.stroke();
+            }
+
+            fuels.forEach(f => drawFuel(f.x, f.y));
+
+            car.forEach((segment, index) => {
+                if (index === 0) {
+                    drawCarHead(segment.x, segment.y, direction);
+                } else {
+                    drawCarBody(segment.x, segment.y, index);
+                }
+            });
+        }
+
+        function drawCarHead(x, y, dir) {
+            const px = x * CELL_SIZE;
+            const py = y * CELL_SIZE;
+            const padding = 2;
+
+            ctx.save();
+            ctx.translate(px + CELL_SIZE / 2, py + CELL_SIZE / 2);
+
+            let angle = 0;
+            if (dir === 'DOWN') angle = Math.PI / 2;
+            else if (dir === 'LEFT') angle = Math.PI;
+            else if (dir === 'UP') angle = -Math.PI / 2;
+
+            ctx.rotate(angle);
+
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.roundRect(-CELL_SIZE / 2 + padding, -CELL_SIZE / 2 + padding, CELL_SIZE - padding * 2, CELL_SIZE - padding * 2, 6);
+            ctx.fill();
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(0, -CELL_SIZE / 4, CELL_SIZE / 4, CELL_SIZE / 2);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(-CELL_SIZE / 3, -CELL_SIZE / 2, 6, 4);
+            ctx.fillRect(CELL_SIZE / 6, -CELL_SIZE / 2, 6, 4);
+            ctx.fillRect(-CELL_SIZE / 3, CELL_SIZE / 2 - 4, 6, 4);
+            ctx.fillRect(CELL_SIZE / 6, CELL_SIZE / 2 - 4, 6, 4);
+
+            ctx.restore();
+        }
+
+        function drawCarBody(x, y, index) {
+            const px = x * CELL_SIZE;
+            const py = y * CELL_SIZE;
+            const padding = 4;
+
+            ctx.fillStyle = index % 2 === 0 ? '#f59e0b' : '#d97706';
+            ctx.beginPath();
+            ctx.roundRect(px + padding, py + padding, CELL_SIZE - padding * 2, CELL_SIZE - padding * 2, 4);
+            ctx.fill();
+
+            ctx.strokeStyle = '#78350f';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(px + padding + 2, py + padding + 2, CELL_SIZE - (padding + 2) * 2, CELL_SIZE - (padding + 2) * 2);
+        }
+
+        function drawFuel(x, y) {
+            const px = x * CELL_SIZE;
+            const py = y * CELL_SIZE;
+            const pad = 6;
+
+            ctx.fillStyle = '#dc2626';
+            ctx.beginPath();
+            ctx.roundRect(px + pad, py + pad, CELL_SIZE - pad * 2, CELL_SIZE - pad * 2, 4);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(px + CELL_SIZE / 2 - 2, py + pad + 3, 4, 6);
+        }
+
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'car_snake_game.html';
+            a.click();
+        }
+
+        window.onload = () => {
+            resizeCanvas();
+        };
+    </script>
+</body>
+</html>

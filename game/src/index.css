@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Pretendard', system-ui, sans-serif;
+    background-color: #030712;
+    color: #f3f4f6;
+  }
+}
+
+/* Custom glow and arcade styling */
+.arcade-glow {
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+}
+
+.shield-glow {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+.slow-glow {
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+/* Subtle grid line animation */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2s infinite ease-in-out;
+}

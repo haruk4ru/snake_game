@@ -1,0 +1,6 @@
+{
+  "name": "Super Car Snake: Hazard Run",
+  "description": "연료 수집과 3가지 특수 아이템(속도감소, 꼬리 단축, 5초 무적), 30초 후 출현하는 도로 공사 장애물을 돌파하는 업그레이드 자동차 스네이크 게임",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
